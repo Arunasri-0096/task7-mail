@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Build Stage Successful'
+                echo url'https://github.com/Arunasri-0096/task7-mail.git'
             }
         }
 
