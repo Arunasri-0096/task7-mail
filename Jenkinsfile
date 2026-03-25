@@ -37,7 +37,7 @@ pipeline {
         success {
             script {
                 try {
-                    mail to: 'yourmail@gmail.com',
+                    mail to: 'srividyapsn2014@gmail.com',
                          subject: "Build Success",
                          body: "Pipeline completed successfully"
                 } catch (Exception e) {
