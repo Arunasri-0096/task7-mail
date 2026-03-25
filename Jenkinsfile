@@ -10,15 +10,19 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Build Stage Successful'
-            }
-            post {
-                success {
-                    mail to: 'srividyapsn2014@gmail.com',
-                    subject: 'Build Success',
-                    body: 'Build completed successfully'
-                }
+          post {
+    success {
+        script {
+            try {
+                mail to: 'yourmail@gmail.com',
+                     subject: "Build Success",
+                     body: "Build completed successfully"
+            } catch (Exception e) {
+                echo "Mail failed but pipeline continues"
             }
         }
+    }
+}
 
         stage('Test') {
             steps {
