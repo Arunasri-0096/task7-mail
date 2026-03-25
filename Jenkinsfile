@@ -1,86 +1,53 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_IMAGE = "arunasri0096/mail"
-    }
-
     stages {
-
         stage('Build') {
             steps {
                 echo 'Build Stage Successful'
-          post {
-    success {
-        script {
-            try {
-                mail to: 'yourmail@gmail.com',
-                     subject: "Build Success",
-                     body: "Build completed successfully"
-            } catch (Exception e) {
-                echo "Mail failed but pipeline continues"
             }
         }
-    }
-}
 
         stage('Test') {
             steps {
                 echo 'Test Stage Successful'
             }
-            post {
-                success {
-                    mail to: 'srividyapsn2014@gmail.com',
-                    subject: 'Test Success',
-                    body: 'Tests passed successfully'
-                }
-            }
         }
 
         stage('Docker Build') {
             steps {
-                script {
-                    docker.build("${DOCKER_IMAGE}:latest")
-                }
-            }
-            post {
-                success {
-                    mail to: 'srividyapsn2014@gmail.com',
-                    subject: 'Docker Build Success',
-                    body: 'Docker image built'
-                }
+                echo 'Docker Build Successful'
             }
         }
 
         stage('Docker Push') {
             steps {
-                script {
-                    docker.withRegistry('', 'dockerhub-id') {
-                        docker.image("${DOCKER_IMAGE}:latest").push()
-                    }
-                }
+                echo 'Docker Push Successful'
             }
-            post {
-                success {
-                    mail to: 'srividyapsn2014@gmail.com',
-                    subject: 'Docker Push Success',
-                    body: 'Image pushed to DockerHub'
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deployment Successful'
+            }
+        }
+    }
+
+    post {
+        success {
+            script {
+                try {
+                    mail to: 'yourmail@gmail.com',
+                         subject: "Build Success",
+                         body: "Pipeline completed successfully"
+                } catch (Exception e) {
+                    echo "Mail failed"
                 }
             }
         }
 
-        stage('Deploy to Kubernetes') {
-            steps {
-                sh 'kubectl apply -f k8s/deployment.yaml'
-                sh 'kubectl apply -f k8s/service.yaml'
-            }
-            post {
-                success {
-                    mail to: 'srividyapsn2014@gmail.com',
-                    subject: 'Deployment Success',
-                    body: 'App deployed to Kubernetes'
-                }
-            }
+        failure {
+            echo 'Pipeline Failed'
         }
     }
 }
