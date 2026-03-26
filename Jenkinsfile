@@ -83,7 +83,7 @@ pipeline {
             steps {
                 sh '''
                 docker rm -f task7 || true
-                docker run -d -p 8990:8080 --name task7 task7
+                docker run -d -p 8990:80 --name task7 task7
                 '''
                 script {
                     try {
